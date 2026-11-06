@@ -5,7 +5,7 @@ A credit analytics engine: Bloomberg data loading and cleaning, OIS discount cur
 - [Does Credit Option Skew Predict Spread Widening?](https://github.com/owensharpe/credit-option-skew)
 - Credit variance premium in price space versus spread space (coming soon)
 
-**Status:** In progress. Right now the repo has the data loader. The curves, CDX pricing and price-to-spread mapping come next.
+**Status:** In progress. Right now the repo has the data loader. The curves, CDX pricing and price-to-spread mapping will be coming shortly.
 
 ## Data
 

@@ -1,8 +1,11 @@
-# Does Credit Option Skew Predict Spread Widening?
+# credit-engine
 
-I'm building a credit analytics engine and using it to test whether skew in credit ETF options predicts spread widening once you strip out the part of skew that comes mechanically from measuring in price instead of spread.
+A credit analytics engine: Bloomberg data loading and cleaning, OIS discount curves, CDX pricing, and the mapping between price space and spread space. It's the shared library behind two working papers, each in its own repo:
 
-**Status:** In progress. Right now the repo has the data loader. The pricing engine and the paper's tests come next.
+- [Does Credit Option Skew Predict Spread Widening?](https://github.com/owensharpe/credit-option-skew)
+- Credit variance premium in price space versus spread space (coming soon)
+
+**Status:** In progress. Right now the repo has the data loader. The curves, CDX pricing and price-to-spread mapping come next.
 
 ## Data
 
@@ -50,7 +53,7 @@ Tickers: `HYG US Equity`, `LQD US Equity`, `JNK US Equity`. Daily from 1/1/2010.
 | `ITRX EUR CDSI GEN 10Y Corp` †       | Spread, bp |
 | `ITRX EUR SNRFIN CDSI GEN 5Y Corp` † | Spread, bp |
 
-HY has both a price and a spread ticker because HY trades on price. IG only has spread. That asymmetry is the point of the paper.
+HY has both a price and a spread ticker because HY trades on price. IG only has spread. That asymmetry is the point of both papers.
 
 ### Equity controls (daily from 1/1/2010)
 
@@ -68,7 +71,7 @@ HY has both a price and a spread ticker because HY trades on price. IG only has 
 | Fed Funds OIS   | `USSOA`†, `C`†, `F`† (1M, 3M, 6M), `USSO1`†, `2`†, `3`†, `5`, `7`†, `10`† (years), all `Curncy`                             |
 | Treasuries      | `USGG3M`†, `USGG2YR`†, `USGG5YR`, `USGG10YR`†, `USGG30YR`† `Index`; `USYC2Y10 Index`† for 2s10s                             |
 
-SOFR OIS history before 2018 is a Bloomberg backfill that tracks Fed Funds OIS almost exactly. The pre-2018 discount curve is a modelling choice, and the paper will say which one it uses.
+SOFR OIS history before 2018 is a Bloomberg backfill that tracks Fed Funds OIS almost exactly. The pre-2018 discount curve is a modelling choice, and each paper says which one it uses.
 
 ### Rebuilding the files
 
@@ -95,6 +98,12 @@ from credit_engine.data import load_panel, load_series
 
 hy_spread = load_series("cdx_hy_5y.spread")
 skew = load_panel(["hyg.ivol_30d_90", "hyg.ivol_30d_100", "hyg.ivol_30d_110"])
+```
+
+The loader reads from `data/` in this repo by default. To keep one copy of the pulls for every repo that uses the engine, put them in a folder outside the repos and point `CREDIT_ENGINE_DATA` at it:
+
+```bash
+conda env config vars set CREDIT_ENGINE_DATA="$HOME/credit-data"
 ```
 
 The tests build a synthetic workbook, so they run without any Bloomberg data.
